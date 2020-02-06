@@ -9,7 +9,7 @@ description = {
    license = "MIT"
 }
 dependencies = {
-   "wtf-plugin-honeybot-fake-wordpress-asa >= 0.1",
+   "wtf-plugin-honeybot-fake-asa-data >= 0.1",
    "resty-route >= 0.1"
 }
 build = {
