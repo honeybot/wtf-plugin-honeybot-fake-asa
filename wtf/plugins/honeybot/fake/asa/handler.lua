@@ -145,7 +145,7 @@ function not_found_404(self)
 end
 
 function static(self, path)
-  if path == "" or path =- "/" then path = "/index.html" end
+  if path == "" or path == "/" then path = "/index.html" end
   local filename = config["asa_datapath"] .. config["asa_version"] .. path
   local template = io.open(filename, "rb")
   if template ~= nil then
@@ -158,7 +158,7 @@ function static(self, path)
 end
 
 function static_cscou(self, path)
-  if path == "" or path =- "/" then path = "/index.html" end
+  if path == "" or path == "/" then path = "/index.html" end
   local filename = config["asa_datapath"] .. config["asa_version"] .. path
   local template = io.open(filename, "rb")
   if template ~= nil then
@@ -171,7 +171,7 @@ function static_cscou(self, path)
 end
 
 function static_cscoe(self, path)
-  if path == "" or path =- "/" then path = "/index.html" end
+  if path == "" or path == "/" then path = "/index.html" end
   local filename = config["asa_datapath"] .. config["asa_version"] .. path
   local template = io.open(filename, "rb")
   if template ~= nil then
@@ -184,7 +184,7 @@ function static_cscoe(self, path)
 end
 
 function static_webvpn(self, path)
-  if path == "" or path =- "/" then path = "/index.html" end
+  if path == "" or path == "/" then path = "/index.html" end
   local filename = config["asa_datapath"] .. config["asa_version"] .. path
   local template = io.open(filename, "rb")
   if template ~= nil then
