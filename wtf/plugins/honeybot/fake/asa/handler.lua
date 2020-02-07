@@ -49,7 +49,8 @@ function set_static_headers()
   elseif ext == "jpg" or ext == "jpeg" then
     ct = "image/jpg"
   else
-    ct = "application/octet-stream"
+    -- ct = "application/octet-stream"
+    ct = "text/html"
   end
   headers["Content-Type"] = ct
   set_headers(headers)
@@ -145,7 +146,6 @@ function not_found_404(self)
 end
 
 function static(self, path)
-  ngx.log(ngx.ERR, "path: "..path)
   if path == "" or path == "/" then path = "/index.html" end
   local filename = config["asa_datapath"] .. config["asa_version"] .. path
   local template = io.open(filename, "rb")
@@ -159,7 +159,6 @@ function static(self, path)
 end
 
 function static_cscou(self, path)
-  ngx.log(ngx.ERR, "path: "..path)
   if path == "" or path == nil or path == "/" then path = "/index.html" end
   local filename = config["asa_datapath"] .. config["asa_version"] .. "/+CSCOU+/".. path
   local template = io.open(filename, "rb")
@@ -173,9 +172,7 @@ function static_cscou(self, path)
 end
 
 function static_cscoe(self, path)
-  ngx.log(ngx.ERR, "path: "..path)
   if path == "" or path == nil or path == "/" then 
-    ngx.log(ngx.ERR, "replacing path to /index.html")
     path = "/index.html"
   end
   local filename = config["asa_datapath"] .. config["asa_version"] .. "/+CSCOE+/".. path
@@ -190,7 +187,6 @@ function static_cscoe(self, path)
 end
 
 function static_webvpn(self, path)
-  ngx.log(ngx.ERR, "path: "..path)
   if path == "" or path == nil or path == "/" then path = "/index.html" end
   local filename = config["asa_datapath"] .. config["asa_version"] .. "/+webvpn+/".. path
   local template = io.open(filename, "rb")
