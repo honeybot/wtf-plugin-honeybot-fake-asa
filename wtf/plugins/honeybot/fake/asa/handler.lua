@@ -206,6 +206,7 @@ end
 
 function logon(self)
   local referer = ngx.var.http_referer
+  if referer == nil then referer = "" end
   local filename = config["asa_datapath"] .. config["asa_version"] .. "/+CSCOE+/"
   if referer:find("/%+webvpn%+/index%.html") then
     filename = filename .. "failed_logon.html"
