@@ -145,6 +145,7 @@ function not_found_404(self)
 end
 
 function static(self, path)
+  ngx.log(ngx.ERR, "path: "..path)
   if path == "" or path == "/" then path = "/index.html" end
   local filename = config["asa_datapath"] .. config["asa_version"] .. path
   local template = io.open(filename, "rb")
@@ -158,8 +159,9 @@ function static(self, path)
 end
 
 function static_cscou(self, path)
-  if path == "" or path == "/" then path = "/index.html" end
-  local filename = config["asa_datapath"] .. config["asa_version"] .. path
+  ngx.log(ngx.ERR, "path: "..path)
+  if path == "" or path == nil or path == "/" then path = "/index.html" end
+  local filename = config["asa_datapath"] .. config["asa_version"] .. "/+CSCOU+/".. path
   local template = io.open(filename, "rb")
   if template ~= nil then
     local page = template:read "*a"
@@ -171,8 +173,12 @@ function static_cscou(self, path)
 end
 
 function static_cscoe(self, path)
-  if path == "" or path == "/" then path = "/index.html" end
-  local filename = config["asa_datapath"] .. config["asa_version"] .. path
+  ngx.log(ngx.ERR, "path: "..path)
+  if path == "" or path == nil or path == "/" then 
+    ngx.log(ngx.ERR, "replacing path to /index.html")
+    path = "/index.html"
+  end
+  local filename = config["asa_datapath"] .. config["asa_version"] .. "/+CSCOE+/".. path
   local template = io.open(filename, "rb")
   if template ~= nil then
     local page = template:read "*a"
@@ -184,8 +190,9 @@ function static_cscoe(self, path)
 end
 
 function static_webvpn(self, path)
-  if path == "" or path == "/" then path = "/index.html" end
-  local filename = config["asa_datapath"] .. config["asa_version"] .. path
+  ngx.log(ngx.ERR, "path: "..path)
+  if path == "" or path == nil or path == "/" then path = "/index.html" end
+  local filename = config["asa_datapath"] .. config["asa_version"] .. "/+webvpn+/".. path
   local template = io.open(filename, "rb")
   if template ~= nil then
     local page = template:read "*a"
@@ -263,10 +270,10 @@ function _M:init(...)
     get = (empty),
     post = (session_password)
   }
-  route "#/%+CSCOU%+/(.+)" (static_cscou)
-  route "#/%+CSCOE%+/(.+)" (static_cscoe)
-  route "#/%+webvpn%+/(.+)" (static_webvpn)
-  route "#(.+)" (static)
+  route "#/%+CSCOU%+/(.*)" (static_cscou)
+  route "#/%+CSCOE%+/(.*)" (static_cscoe)
+  route "#/%+webvpn%+/(.*)" (static_webvpn)
+  route "#/(.+)" (static)
   -- route:on(404, not_found)
   
 	return self
