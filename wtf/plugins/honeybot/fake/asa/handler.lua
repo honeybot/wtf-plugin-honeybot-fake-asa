@@ -2,7 +2,6 @@ local require = require
 local tools = require("wtf.core.tools")
 local Plugin = require("wtf.core.classes.plugin")
 local route = require "resty.route".new()
--- local lfs = require("lfs")
 
 local _M = Plugin:extend()
 _M.name = "honeybot.fake.asa"
@@ -14,7 +13,6 @@ function set_headers(hdrs)
   ngx.header["Server"] = nil
   
   if hdrs then
-    -- ngx.header = {}
     for key,val in pairs(hdrs) do
       ngx.header[key] = val
     end
@@ -27,7 +25,6 @@ end
 
 function set_static_headers()
   local headers = {}
-  -- headers["Transfer-Encoding"] = "chunked"
   headers["Pragma"] = "no-cache"
   headers["Date"] = ngx.http_time(ngx.time())
   headers["Cache-Control"] = "no-store"
@@ -49,7 +46,6 @@ function set_static_headers()
   elseif ext == "jpg" or ext == "jpeg" then
     ct = "image/jpg"
   else
-    -- ct = "application/octet-stream"
     ct = "text/html"
   end
   headers["Content-Type"] = ct
@@ -64,7 +60,6 @@ function set_empty_headers(webvpn)
   headers["Cache-Control"] = "no-store"
   headers["X-Frame-Options"] = "SAMEORIGIN"
   headers["Strict-Transport-Security"] = "max-age=31536000; includeSubDomains"
-  -- headers["Content-Length"] = "0"
   if webvpn ~= nil then
     headers["webvpn"] = webvpn
   end
@@ -73,8 +68,6 @@ end
 
 function set_redirect_headers(location)
   local headers = {}
-  -- headers["Strict-Transport-Security"] = "max-age=31536000; includeSubDomains"
-  -- headers["Content-Length"] = "0"
   ngx.header["Strict-Transport-Security"] = "max-age=31536000; includeSubDomains"
   ngx.header["Content-Length"] = "0"
   ngx.header["Content-Type"] = nil
@@ -98,7 +91,6 @@ function set_dynamic_headers()
   local cookie_acSamlv2Error = "acSamlv2Error=; expires=Thu, 01 Jan 1970 22:00:00 GMT; path=/; secure"
   local cookie_webvpnLang = "webvpnLang=en; path=/; secure"
   
-  -- headers["Transfer-Encoding"] = "chunked"
   headers["Content-Type"] = "text/html; charset=utf-8"  
   headers["Set-Cookie"] = {cookie_webvpn, cookie_webvpn_as, cookie_webvpnc, cookie_webvpn_portal, coookie_webvpnSharePoint, cookie_samlPreauthSessionHash, cookie_webvpnlogin, cookie_acSamlv2Token,cookie_acSamlv2Error, cookie_webvpnLang}
   headers["Cache-Control"] = "no-store"
@@ -113,20 +105,16 @@ end
 function send_response(state, content)
   ngx.ctx.response_from_lua = 1
   ngx.status = state
-  -- ngx.header["Test"] = "value"
   ngx.print(content)
   ngx.exit(state)
 end
 
 function not_found_302(self)
   set_redirect_headers("/+CSCOE+/message.html?mc=2")
-  -- ngx.redirect("/+CSCOE+/message.html?mc=2", 302)
   send_response(302, "")
 end
 
 function not_found(self)
-  -- set_redirect_headers("/+CSCOE+/message.html?mc=2")
-  -- ngx.redirect("/+CSCOE+/message.html?mc=2", 302)
   local headers = {}
   ngx.header["Content-Type"] = nil
   ngx.header["Server"] = nil
@@ -139,15 +127,13 @@ function not_found(self)
 end
 
 function not_found_404(self)
-  -- set_redirect_headers("/+CSCOE+/message.html?mc=2")
-  -- ngx.redirect("/+CSCOE+/message.html?mc=2", 302)
   set_headers({["Strict-Transport-Security"] = "max-age=31536000; includeSubDomains"})
   send_response(404, "404 Not Found\n")
 end
 
 function static(self, path)
-  if path == "" or path == "/" then path = "/index.html" end
-  local filename = config["asa_datapath"] .. config["asa_version"] .. path
+  if path == "" or path == "/" then path = "index.html" end
+  local filename = config["asa_datapath"] .. config["asa_version"] .. "/" .. path
   local template = io.open(filename, "rb")
   if template ~= nil then
     local page = template:read "*a"
@@ -270,7 +256,6 @@ function _M:init(...)
   route "#/%+CSCOE%+/(.*)" (static_cscoe)
   route "#/%+webvpn%+/(.*)" (static_webvpn)
   route "#/(.+)" (static)
-  -- route:on(404, not_found)
   
 	return self
 end
